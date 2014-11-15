@@ -6,12 +6,14 @@ import (
 	"os"
 	"strings"
 	"regexp"
-
+	"path/filepath"
 )
 
 func main() {
 	sourceFile, err := ioutil.ReadFile(os.Args[1])
 	var s string
+	var cfile bool = (filepath.Ext(os.Args[1]) == "c")
+
 	if err == nil {
 		s = string(sourceFile)
 		fmt.Println(s)
@@ -23,7 +25,11 @@ func main() {
 
 	for i := 0; i < len(lineSlice); i++ {
 		debugFile.WriteString(lineSlice[i].s + "\n")
-		AddPrint(debugFile, lineSlice[i])
+		if cfile {
+			AddPrintc(debugFile, lineSlice[i].s)
+		}else{
+			AddPrint(debugFile, lineSlice[i])
+		}
 	}
 }
 
