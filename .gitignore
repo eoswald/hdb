@@ -1,3 +1,4 @@
 .*
 !/.gitignore
 hdb
+testfiles/c++/debug.cpp
