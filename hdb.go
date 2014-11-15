@@ -15,15 +15,19 @@ func main() {
 		fmt.Println(s)
 	}
 	splitFile := strings.Split(s, "\n")
-	debugFile, err := os.Create("debug.cpp")
+	debugFile, err := os.Create("testfiles/c++/debug.cpp")
 	if err != nil {
 		panic(err)
 	}
 	for i := 0; i < len(splitFile); i++ {
-		x, err := debugFile.WriteString(splitFile[i] + "\n")
-		fmt.Println(x)
+		_, err := debugFile.WriteString(splitFile[i] + "\n")
 		if err != nil {
 			panic(err)
 		}
+		addPrint(debugFile, splitFile[i])
 	}
+}
+
+func addPrint(file *os.File, s string) {
+	file.WriteString("std::cout << \"" + s + "\" std::endl;\n")
 }
