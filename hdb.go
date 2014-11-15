@@ -15,6 +15,7 @@ func main() {
 		fmt.Println(s)
 	}
 	splitFile := strings.Split(s, "\n")
+	splitFile = removeNewlines(splitFile)
 	lineSlice := createLines(splitFile)
 	debugFile, err := os.Create("testfiles/c++/debug.cpp")
 	if err != nil {
@@ -30,7 +31,7 @@ func main() {
 }
 
 type lineType struct {
-	s string
+	s    string
 	code int
 }
 
@@ -38,10 +39,20 @@ func AddPrint(file *os.File, s string) {
 	file.WriteString("std::cout << \"" + s + "\" std::endl;\n")
 }
 
-func createLines(stringSlice []string) ([]lineType) {
+func createLines(stringSlice []string) []lineType {
 	var lineSlice []lineType
 	for i := 0; i < len(stringSlice); i++ {
 		lineSlice = append(lineSlice, lineType{stringSlice[i], 0})
 	}
 	return lineSlice
+}
+
+func removeNewlines(stringSlice []string) []string {
+	var newSlice []string
+	for i := 0; i < len(stringSlice); i++ {
+		if stringSlice[i] != "" && stringSlice[i][0] != 10 {
+			newSlice = append(newSlice, stringSlice[i])
+		}
+	}
+	return newSlice
 }
