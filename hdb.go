@@ -17,10 +17,8 @@ func main() {
 	splitFile := strings.Split(s, "\n")
 	splitFile = removeNewlines(splitFile)
 	lineSlice := createLines(splitFile)
-	debugFile, err := os.Create("testfiles/c++/debug.cpp")
-	if err != nil {
-		panic(err)
-	}
+	debugFile, _ := os.Create("testfiles/c++/debug.cpp")
+
 	for i := 0; i < len(lineSlice); i++ {
 		debugFile.WriteString(lineSlice[i].s + "\n")
 		AddPrint(debugFile, lineSlice[i])
@@ -36,6 +34,10 @@ func AddPrint(file *os.File, line lineType) {
 	if line.code == 0 {
 		file.WriteString("std::cout << \"" + line.s + "\" std::endl;\n")
 	}
+}
+
+func AddPrintc(file *os.File, s string) {
+	file.WriteString("printf(\"" + s + "\n\");\n");
 }
 
 func createLines(stringSlice []string) []lineType {
