@@ -89,14 +89,9 @@ func RemoveNewlines(stringSlice []string) []string {
 }
 
 func CompileAndRun() {
-	clangCmd := exec.Command("clang++", "-Wall", "testfiles/c++/debug.cpp", "-o", "testfiles/c++/out")
 	gccCmd := exec.Command("g++", "-Wall", "testfiles/c++/debug.cpp", "-o", "testfiles/c++/out")
-	err := clangCmd.Run()
-	fmt.Println(err)
-	if err != nil {
-		gccCmd.Run()
-	}
+	gccCmd.Run()
 	runCmd := exec.Command("./testfiles/c++/out")
-	err = runCmd.Run()
+	err := runCmd.Run()
 	fmt.Println(err)
 }
