@@ -52,14 +52,14 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 			file.WriteString(line.s + "\n")
 		case 343: //function
 			file.WriteString(line.s + "\n")
-			file.WriteString("Entering " + line.info + "\n")
+			//file.WriteString("Entering " + line.info + "\n")
 		case 666: //if
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString(line.info + "evaluates to true\n")
+			//file.WriteString(line.info + "evaluates to true\n")
 		case 752: //else if
 			file.WriteString(line.s + "\n")
-			file.WriteString(line.info + "evaluates to true\n")
+			//file.WriteString(line.info + "evaluates to true\n")
 		case 580: //else
 			file.WriteString(line.s + "\n")
 			file.WriteString("Else\n")
@@ -70,31 +70,91 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 		case 603: //while
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString(line.info + "evaluates to true, looping")
+			//file.WriteString(line.info + "evaluates to true, looping")
 		case 1:
 			file.WriteString(line.s + "\n")
 		}
 	}
 }
-
 func MarkInvalid(lineSlice []lineType) {
 
-	r, _ := regexp.Compile(`(.*)\((.*)\)(.*)\{`)
-	opencount := 0
-	closecount := 0
+	elseifR, _ := regexp.Compile(`(\s*)\}(\s*)else(\s*)if(\s*)\((.*)\)(\s*)\{(\s*)`)
+	ifR, _ := regexp.Compile(`(\s*)if(\s*)\((.*)\)(\s*)\{(\s*)`)
+	forR, _ := regexp.Compile(`(\s*)for(\s*)\((.*)\)(\s*)\{(\s*)`)
+	whileR, _ := regexp.Compile(`(\s*)while(\s*)\((.*)\)(\s*)\{(\s*)`)
+	funcR, _ := regexp.Compile(`(.*)\((.*)\)(\s*)\{(\s*)`)
+
+	classR, _ := regexp.Compile(`(\s*)class(.*)\{`)
+	structR, _ := regexp.Compile(`(\s*)struct(.*)\{`)
+	elseR, _ := regexp.Compile(`(\s*)\}(\s*)else(\s*)\{`)
+	scopeR, _ := regexp.Compile(`(\s*)\{(\s*)`)
+	closeR, _ := regexp.Compile(`(\s*)\}(\s*)`)
+	stack := []int{}
 
 	for i := 0; i < len(lineSlice); i++ {
-		fmt.Println(opencount, closecount, lineSlice[i].code)
-		if opencount <= closecount {
-			lineSlice[i].code = 1
-		}
-		if r.MatchString(lineSlice[i].s) {
-			opencount++
-		} else if strings.TrimSpace(lineSlice[i].s)[0] == 125 {
-			closecount++
-			lineSlice[i].code = 1
+		if elseifR.MatchString(lineSlice[i].s) {
+			//elseif
+			lineSlice[i].code=752
+			PopStack(stack);
+			stack = append(stack, 752)
+		}else if ifR.MatchString(lineSlice[i].s) {
+			//if
+			lineSlice[i].code=666
+			stack = append(stack, 666)
+		}else if forR.MatchString(lineSlice[i].s) {
+			//for
+			lineSlice[i].code=4
+			stack = append(stack, 4)
+		}else if whileR.MatchString(lineSlice[i].s) {
+			//while
+			lineSlice[i].code=603
+			stack = append(stack, 603)
+		}else if funcR.MatchString(lineSlice[i].s) {
+			//func
+			lineSlice[i].code=343
+			stack = append(stack, 343)
+		}else if classR.MatchString(lineSlice[i].s) {
+			//class
+			lineSlice[i].code=1
+			stack = append(stack, 1)
+		}else if structR.MatchString(lineSlice[i].s) {
+			//struct
+			lineSlice[i].code=1
+			stack = append(stack, 1)
+		}else if elseR.MatchString(lineSlice[i].s) {
+			//else
+			lineSlice[i].code=580
+			PopStack(stack);
+			stack = append(stack, 580)
+		}else if scopeR.MatchString(lineSlice[i].s) {
+			//scope
+			lineSlice[i].code= 0
+			stack = append(stack, 0)
+					}else if closeR.MatchString(lineSlice[i].s) {
+			//close
+			lineSlice[i].code=1
+			PopStack(stack);
+		}else{
+			if InFunction(stack) {
+				lineSlice[i].code=0
+			}else{
+				lineSlice[i].code=1
+			}
 		}
 	}
+}
+
+func InFunction(stack []int)(exists bool){
+	for i := 0; i < len(stack); i++ {
+		if stack[i]==343{
+			return true
+		}
+	}
+	return false
+}
+
+func PopStack(stack []int){
+	stack = stack[:len(stack)-1]
 }
 
 func CreateLines(stringSlice []string) []lineType {
