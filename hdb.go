@@ -22,11 +22,8 @@ func main() {
 		panic(err)
 	}
 	for i := 0; i < len(lineSlice); i++ {
-		_, err := debugFile.WriteString(splitFile[i] + "\n")
-		if err != nil {
-			panic(err)
-		}
-		AddPrint(debugFile, lineSlice[i].s)
+		debugFile.WriteString(lineSlice[i].s + "\n")
+		AddPrint(debugFile, lineSlice[i])
 	}
 }
 
@@ -35,8 +32,10 @@ type lineType struct {
 	code int
 }
 
-func AddPrint(file *os.File, s string) {
-	file.WriteString("std::cout << \"" + s + "\" std::endl;\n")
+func AddPrint(file *os.File, line lineType) {
+	if line.code == 0 {
+		file.WriteString("std::cout << \"" + line.s + "\" std::endl;\n")
+	}
 }
 
 func createLines(stringSlice []string) []lineType {
