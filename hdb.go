@@ -94,6 +94,7 @@ func CompileAndRun() {
 	gccCmd := exec.Command("g++", "-Wall", "testfiles/c++/debug.cpp", "-o", "testfiles/c++/out")
 	gccCmd.Run()
 	runCmd := exec.Command("./testfiles/c++/out")
-	err := runCmd.Run()
+	output, err := runCmd.Output()
+	fmt.Println(string(output))
 	fmt.Println(err)
 }
