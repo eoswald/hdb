@@ -14,6 +14,10 @@ func main() {
 	sourceFile, err := ioutil.ReadFile(os.Args[1])
 	var s string
 	var cFile bool = (filepath.Ext(os.Args[1]) == "c")
+	var lastLine bool
+	if len(os.Args) > 2 && os.Args[2] == "--lastline=true" {
+		lastLine = true
+	}
 
 	if err == nil {
 		s = string(sourceFile)
@@ -30,7 +34,7 @@ func main() {
 		AddPrint(debugFile, lineSlice[i], cFile)
 	}
 	debugFile.Close()
-	CompileAndRun()
+	CompileAndRun(lastLine)
 }
 
 type lineType struct {
@@ -175,12 +179,17 @@ func RemoveNewlines(stringSlice []string) []string {
 	return newSlice
 }
 
-func CompileAndRun() {
+func CompileAndRun(lastLine bool) {
 	gccCmd := exec.Command("g++", "-Wall", "testfiles/c++/debug.cpp", "-o", "testfiles/c++/out")
 	gccCmd.Run()
 	runCmd := exec.Command("./testfiles/c++/out")
 	output, err := runCmd.Output()
-	fmt.Println(string(output))
+	if !lastLine {
+		fmt.Println(string(output))
+	} else {
+		outSlice := strings.Split(strings.TrimSpace(string(output)), "\n")
+		fmt.Println(outSlice[len(outSlice)-1])
+	}
 	fmt.Println(err)
 }
 
