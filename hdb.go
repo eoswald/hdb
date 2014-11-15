@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"regexp"
 	"path/filepath"
 	"strings"
 )
@@ -43,6 +44,16 @@ type lineType struct {
 func AddPrint(file *os.File, line lineType) {
 	if line.code == 0 {
 		file.WriteString("std::cout << \"" + line.s + "\" std::endl;\n")
+	}
+}
+
+func MarkInvalid(lineSlice []lineType) {
+	r, _ := regexp.Compile(`(.*)\((.*)\)(.*)\{`)
+
+	for i := 0; i < len(lineSlice); i++{
+		if r.MatchString(lineSlice[i].s){
+			lineSlice[i].code = 0
+		}
 	}
 }
 
