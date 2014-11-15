@@ -22,6 +22,7 @@ func main() {
 	splitFile := strings.Split(s, "\n")
 	splitFile = RemoveNewlines(splitFile)
 	lineSlice := CreateLines(splitFile)
+	MarkInvalid(lineSlice)
 	debugFile, _ := os.Create("testfiles/c++/debug.cpp")
 
 	for i := 0; i < len(lineSlice); i++ {
