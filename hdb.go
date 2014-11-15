@@ -5,11 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"path/filepath"
 )
 
 func main() {
 	sourceFile, err := ioutil.ReadFile(os.Args[1])
 	var s string
+	var cfile bool = (filepath.Ext(os.Args[1]) == "c")
 	if err == nil {
 		s = string(sourceFile)
 		fmt.Println(s)
@@ -26,7 +28,11 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		AddPrint(debugFile, lineSlice[i].s)
+		if cfile {
+			AddPrintc(debugFile, lineSlice[i].s)
+		}else{
+			AddPrint(debugFile, lineSlice[i].s)
+		}
 	}
 }
 
@@ -37,6 +43,10 @@ type lineType struct {
 
 func AddPrint(file *os.File, s string) {
 	file.WriteString("std::cout << \"" + s + "\" std::endl;\n")
+}
+
+func AddPrintc(file *os.File, s string) {
+	file.WriteString("printf(\"" + s + "\n\");\n");
 }
 
 func createLines(stringSlice []string) []lineType {
