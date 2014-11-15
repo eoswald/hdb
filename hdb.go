@@ -48,11 +48,20 @@ func AddPrint(file *os.File, line lineType) {
 }
 
 func MarkInvalid(lineSlice []lineType) {
-	r, _ := regexp.Compile(`(.*)\((.*)\)(.*)\{`)
 
-	for i := 0; i < len(lineSlice); i++{
-		if r.MatchString(lineSlice[i].s){
-			lineSlice[i].code = 0
+	r, _ := regexp.Compile(`(.*)\((.*)\)(.*)\{`)
+	opencount := 0
+	closecount := 0
+
+	for i := 0; i < len(lineSlice); i++ {
+		fmt.Println(opencount, closecount, lineSlice[i].code)
+		if opencount <= closecount {
+			lineSlice[i].code = 1
+		}
+		if r.MatchString(lineSlice[i].s) {
+			opencount++
+		} else if lineSlice[i].s == "}" {
+			closecount++
 		}
 	}
 }
