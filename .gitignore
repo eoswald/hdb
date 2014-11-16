@@ -4,3 +4,4 @@ hdb
 testfiles/c++/debug.cpp
 testfiles/c++/out
 a.out
+uncrustify/
