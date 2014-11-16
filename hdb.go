@@ -226,29 +226,12 @@ func MakeFile() {
 */
 
 func Format(f string) string {
-	//var s string
-	filename := f
-	formatCmd := exec.Command("astyle/build/gcc/bin/astyle", "--style=java", "--delete-empty-lines", "--add-brackets", filename)
-	e := formatCmd.Run()
-	if e != nil {
-		panic(e)
-	}
-	// File name manipulation! Hooray!
-	origFile := filename + ".orig"
-	formattedFile, err := ioutil.ReadFile(filename)
 	var s string
-	if err == nil {
-		s = string(formattedFile)
+	filename := os.Args[1]
+	out, err := exec.Command("../uncrustify/src/uncrustify","-c","uncrustify/etc/hdb.cfg","-f",filename).Output()
+	if err !=nil {
+		panic(err)
 	}
-	rmCmd := exec.Command("rm", filename)
-	e = rmCmd.Run()
-	if e != nil {
-		panic(e)
-	}
-	rnCmd := exec.Command("mv", origFile, filename)
-	e = rnCmd.Run()
-	if e != nil {
-		panic(e)
-	}
+	s = string(out)
 	return s
 }
