@@ -18,6 +18,7 @@ func main() {
 		lastLine = true
 	}
 
+	//MakeFile()
 	s = Removecomments(Format(os.Args[1]))
 	splitFile := strings.Split(s, "\n")
 	splitFile = RemoveNewlines(splitFile)
@@ -210,36 +211,40 @@ func Removecomments(s string) string {
 	return ret
 }
 
+/*
 func MakeFile() {
 	makeCmd := exec.Command("make", "-f", "astyle/build/gcc/Makefile")
-	makeCmd.Run()
+	err := makeCmd.Run()
+	if err != nil {
+		panic(err)
+	}
 }
+*/
 
-func Format(f string) (string) {
+func Format(f string) string {
 	//var s string
 	filename := f
-	formatCmd := exec.Command("astyle/build/gcc/bin/astyle","--style=java","--delete-empty-lines","--add-brackets",filename)
+	formatCmd := exec.Command("astyle/build/gcc/bin/astyle", "--style=java", "--delete-empty-lines", "--add-brackets", filename)
 	e := formatCmd.Run()
-	if e !=nil {
+	if e != nil {
 		panic(e)
-		return
 	}
 	// File name manipulation! Hooray!
 	origFile := filename + ".orig"
 	formattedFile, err := ioutil.ReadFile(filename)
 	var s string
-	if (err == nil) {
+	if err == nil {
 		s = string(formattedFile)
 	}
-	rmCmd := exec.Command("rm",filename)
+	rmCmd := exec.Command("rm", filename)
 	e = rmCmd.Run()
-	if e !=nil {
-		panic (e)
+	if e != nil {
+		panic(e)
 	}
-	rnCmd := exec.Command("mv",origFile,filename)
+	rnCmd := exec.Command("mv", origFile, filename)
 	e = rnCmd.Run()
-	if e !=nil {
-		panic (e)
+	if e != nil {
+		panic(e)
 	}
 	return s
 }
