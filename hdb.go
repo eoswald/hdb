@@ -13,15 +13,12 @@ import (
 func main() {
 	sourceFile, err := ioutil.ReadFile(os.Args[1])
 	var s string
-	var cfile bool = (filepath.Ext(os.Args[1]) == "c")
+	var cFile bool = (filepath.Ext(os.Args[1]) == "c")
 
 	if err == nil {
 		s = string(sourceFile)
 		fmt.Println(s)
 	}
-	
-	Removecomments(s);
-	
 	splitFile := strings.Split(s, "\n")
 	splitFile = RemoveNewlines(splitFile)
 	lineSlice := CreateLines(splitFile)
@@ -29,12 +26,7 @@ func main() {
 	debugFile, _ := os.Create("testfiles/c++/debug.cpp")
 
 	for i := 0; i < len(lineSlice); i++ {
-		if cfile {
-			AddPrintc(debugFile, lineSlice[i].s)
-		} else {
-			AddPrint(debugFile, lineSlice[i])
-		}
-		debugFile.WriteString(lineSlice[i].s + "\n")
+		AddPrint(debugFile, lineSlice[i], cFile)
 	}
 	debugFile.Close()
 	CompileAndRun()
@@ -45,9 +37,17 @@ type lineType struct {
 	code int
 }
 
-func AddPrint(file *os.File, line lineType) {
-	if line.code == 0 {
-		file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
+func AddPrint(file *os.File, line lineType, cFile bool) {
+	if cFile {
+		if line.code == 0 {
+			file.WriteString("printf(\"" + line.s + "\n\");\n")
+			file.WriteString(line.s + "\n")
+		}
+	} else {
+		if line.code == 0 {
+			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
+			file.WriteString(line.s + "\n")
+		}
 	}
 }
 
@@ -71,9 +71,6 @@ func MarkInvalid(lineSlice []lineType) {
 	}
 }
 
-func AddPrintc(file *os.File, s string) {
-	file.WriteString("printf(\"" + s + "\n\");\n")
-}
 
 func CreateLines(stringSlice []string) []lineType {
 	var lineSlice []lineType
@@ -100,7 +97,4 @@ func CompileAndRun() {
 	output, err := runCmd.Output()
 	fmt.Println(string(output))
 	fmt.Println(err)
-}
-
-func Removecomments(s string ){
 }
