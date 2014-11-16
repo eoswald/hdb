@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"regexp"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -22,7 +22,6 @@ func main() {
 	splitFile := strings.Split(s, "\n")
 	splitFile = RemoveNewlines(splitFile)
 	lineSlice := CreateLines(splitFile)
-	MarkInvalid(lineSlice)
 	debugFile, _ := os.Create("testfiles/c++/debug.cpp")
 
 	for i := 0; i < len(lineSlice); i++ {
@@ -44,7 +43,7 @@ type lineType struct {
 
 func AddPrint(file *os.File, line lineType) {
 	if line.code == 0 {
-		file.WriteString("std::cout << \"" + line.s + "\" std::endl;\n")
+		file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 	}
 }
 
@@ -61,8 +60,9 @@ func MarkInvalid(lineSlice []lineType) {
 		}
 		if r.MatchString(lineSlice[i].s) {
 			opencount++
-		} else if lineSlice[i].s == "}" {
+		} else if lineSlice[i].s[0] == 125 {
 			closecount++
+			lineSlice[i].code = 1
 		}
 	}
 }
