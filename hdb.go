@@ -17,8 +17,9 @@ func main() {
 
 	if err == nil {
 		s = string(sourceFile)
-		fmt.Println(s)
+		//fmt.Println(s)
 	}
+	s = Removecomments(s);
 	splitFile := strings.Split(s, "\n")
 	splitFile = RemoveNewlines(splitFile)
 	lineSlice := CreateLines(splitFile)
@@ -97,4 +98,11 @@ func CompileAndRun() {
 	output, err := runCmd.Output()
 	fmt.Println(string(output))
 	fmt.Println(err)
+}
+
+func Removecomments(s string) string{
+     r, _ := regexp.Compile(`/\*(.*?)\*/|//(.*?)\n`)
+     ret := r.ReplaceAllString(s, "")
+     fmt.Println("TEST\n" + ret + "\nENDTEST\n")
+     return ret
 }
