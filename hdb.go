@@ -53,13 +53,13 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 		whiteSpaceLoop := strings.Repeat("\t", whiteSpaceSize)
 		switch line.code {
 		case 0:
-			file.WriteString("std::cout << \"\033[32m" + line.s + "\033[0m\" << std::endl;\n")
+			file.WriteString("std::cout << \"\033[32m" + strings.Replace(line.s, "\"", "\\\"", -1) + "\033[0m\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 		case 343: //function
 			file.WriteString(line.s + "\n")
 			file.WriteString("std::cout << \"\033[34m" + "Entering " + line.info + "\033[0m\" << std::endl;\n")
 		case 666: //if
-			file.WriteString("std::cout << \"\033[32m" + line.s + "\033[0m\" << std::endl;\n")
+			file.WriteString("std::cout << \"\033[32m" + strings.Replace(line.s, "\"", "\\\"", -1) + "\033[0m\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 			file.WriteString("std::cout << \"\033[34m" + whiteSpaceIf + "if statement: " + line.info + " evaluates to true\033[0m\" << std::endl;\n")
 		case 752: //else if
@@ -69,7 +69,7 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 			file.WriteString(line.s + "\n")
 			file.WriteString("std::cout << \"\033[34m" +  whiteSpaceIf + "else statement:\033[0m\" << std::endl;\n")
 		case 4: //for
-			file.WriteString("std::cout << \"\033[32m" + line.s + "\033[0m\" << std::endl;\n")
+			file.WriteString("std::cout << \"\033[32m" + strings.Replace(line.s, "\"", "\\\"", -1) + "\033[0m\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 
 			forArgs := strings.Split(line.info, ";")
@@ -80,7 +80,7 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 				file.WriteString("std::cout << \"\033[34m" + whiteSpaceLoop + "looping: " + line.info + "\033[0m\" << std::endl;\n")
 			}
 		case 603: //while
-			file.WriteString("std::cout << \"\033[32m" + line.s + "\033[0m\" << std::endl;\n")
+			file.WriteString("std::cout << \"\033[32m" + strings.Replace(line.s, "\"", "\\\"", -1) + "\033[0m\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 			file.WriteString("std::cout << \"\033[34m" + whiteSpaceLoop + line.info + " evaluates to true\033[0m\" << std::endl;\n")
 		case 1:
