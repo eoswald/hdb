@@ -60,7 +60,7 @@ func AddPrint(file *os.File, line lineType, cFile bool, trackAll bool) {
 			file.WriteString(line.s + "\n")
 			exp := strings.Split(line.s, " ")
 			if trackAll && len(exp) > 1 && exp[1] == "=" {
-				file.WriteString("std::cout << \"" + exp[0] + " = \"" + "<<" + exp[0] + " << std::endl;\n")
+				file.WriteString("std::cout << \"\033[31m" + exp[0] + " = \"" + "<<" + exp[0] + " << \"\033[0m\"<< std::endl;\n")
 			}
 		case 343: //function
 			file.WriteString(line.s + "\n")
