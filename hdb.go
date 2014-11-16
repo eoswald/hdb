@@ -238,5 +238,5 @@ func Format(f string) string {
 		panic(err)
 	}
 	s = string(out)
-	fmt.Println(s)
+	return s
 }
