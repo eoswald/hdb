@@ -233,7 +233,7 @@ func MakeFile() {
 func Format(f string) string {
 	var s string
 	filename := os.Args[1]
-	out, err := exec.Command("../uncrustify/src/uncrustify","-c","uncrustify/etc/hdb.cfg","-f",filename).Output()
+	out, err := exec.Command("uncrustify/src/uncrustify","-c","uncrustify/etc/hdb.cfg","-f",filename).Output()
 	if err !=nil {
 		panic(err)
 	}
