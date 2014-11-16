@@ -57,12 +57,7 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 			file.WriteString(line.s + "\n")
 		case 343: //function
 			file.WriteString(line.s + "\n")
-<<<<<<< HEAD
-			file.WriteString("std::cout << \"" + "Entering " + line.info[0] + "\" << std::endl;\n")
-=======
 			file.WriteString("std::cout << \"" + "Entering " + line.info + "\" << std::endl;\n")
-
->>>>>>> f7c53825685fc1286f25716fda72202dd063ae59
 		case 666: //if
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
