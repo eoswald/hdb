@@ -4,3 +4,5 @@ hdb
 testfiles/c++/debug.cpp
 testfiles/c++/out
 a.out
+astyle/build/gcc/bin
+astyle/build/gcc/obj
