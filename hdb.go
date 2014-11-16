@@ -36,7 +36,7 @@ func main() {
 type lineType struct {
 	s    string
 	code int
-	info []string
+	info string
 }
 
 func AddPrint(file *os.File, line lineType, cFile bool) {
@@ -57,15 +57,15 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 			file.WriteString(line.s + "\n")
 		case 343: //function
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + "Entering " + line.info[0] + "\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + "Entering " + line.info + "\" << std::endl;\n")
 
 		case 666: //if
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + whiteSpaceIndent + "if statement: " + line.info[0] + " evaluates to true\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + whiteSpaceIndent + "if statement: " + line.info + " evaluates to true\" << std::endl;\n")
 		case 752: //else if
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + whiteSpaceIndent + "else if statement: " + line.info[0] + " evaluates to true\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + whiteSpaceIndent + "else if statement: " + line.info + " evaluates to true\" << std::endl;\n")
 		case 580: //else
 			file.WriteString(line.s + "\n")
 			file.WriteString("std::cout << \"" +  whiteSpaceIndent + "else statement:\" << std::endl;\n")
@@ -76,7 +76,7 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 		case 603: //while
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + whiteSpaceIndent + line.info[0] + " evaluates to true\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + whiteSpaceIndent + line.info + " evaluates to true\" << std::endl;\n")
 		case 1:
 			file.WriteString(line.s + "\n")
 		}
@@ -104,29 +104,29 @@ func MarkInvalid(lineSlice []lineType) {
 			lineSlice[i].code = 752
 			PopStack(stack)
 			stack = append(stack, 752)
-			lineSlice[i].info = []string{GetParenContents(lineSlice[i].s)}
+			lineSlice[i].info = GetParenContents(lineSlice[i].s)
 		} else if ifR.MatchString(lineSlice[i].s) {
 			//if
 			lineSlice[i].code = 666
 			stack = append(stack, 666)
-			lineSlice[i].info = []string{GetParenContents(lineSlice[i].s)}
+			lineSlice[i].info = GetParenContents(lineSlice[i].s)
 		} else if forR.MatchString(lineSlice[i].s) {
 			//for
 			lineSlice[i].code = 4
 			stack = append(stack, 4)
-			lineSlice[i].info = []string{GetParenContents(lineSlice[i].s)}
+			lineSlice[i].info = GetParenContents(lineSlice[i].s)
 		} else if whileR.MatchString(lineSlice[i].s) {
 			//while
 			lineSlice[i].code = 603
 			stack = append(stack, 603)
-			lineSlice[i].info = []string{GetParenContents(lineSlice[i].s)}
+			lineSlice[i].info = GetParenContents(lineSlice[i].s)
 		} else if funcR.MatchString(lineSlice[i].s) {
 			//func
 			lineSlice[i].code = 343
 			stack = append(stack, 343)
 			drill := strings.SplitN(lineSlice[i].s, "(", 2)[0]
 			drillList := strings.Fields(drill)
-			lineSlice[i].info = []string{drillList[len(drillList)-1]}
+			lineSlice[i].info = drillList[len(drillList)-1]
 		} else if classR.MatchString(lineSlice[i].s) {
 			//class
 			lineSlice[i].code = 1
@@ -180,7 +180,7 @@ func PopStack(stack []int) {
 func CreateLines(stringSlice []string) []lineType {
 	var lineSlice []lineType
 	for i := 0; i < len(stringSlice); i++ {
-		lineSlice = append(lineSlice, lineType{stringSlice[i], 0, []string{}})
+		lineSlice = append(lineSlice, lineType{stringSlice[i], 0, ""})
 	}
 	return lineSlice
 }
