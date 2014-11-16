@@ -108,7 +108,7 @@ func MarkInvalid(lineSlice []lineType) {
 		if elseifR.MatchString(lineSlice[i].s) {
 			//elseif
 			lineSlice[i].code = 752
-			PopStack(stack)
+			stack = PopStack(stack)
 			stack = append(stack, 752)
 			lineSlice[i].info = GetParenContents(lineSlice[i].s)
 		} else if ifR.MatchString(lineSlice[i].s) {
@@ -144,7 +144,7 @@ func MarkInvalid(lineSlice []lineType) {
 		} else if elseR.MatchString(lineSlice[i].s) {
 			//else
 			lineSlice[i].code = 580
-			PopStack(stack)
+			stack = PopStack(stack)
 			stack = append(stack, 580)
 		} else if scopeR.MatchString(lineSlice[i].s) {
 			//scope
@@ -153,9 +153,12 @@ func MarkInvalid(lineSlice []lineType) {
 		} else if closeR.MatchString(lineSlice[i].s) {
 			//close
 			lineSlice[i].code = 1
-			PopStack(stack)
+			stack = PopStack(stack)
+			fmt.Println("asdf")
 		} else {
 			if InFunction(stack) {
+				fmt.Println(stack)
+				fmt.Println(lineSlice[i].s)
 				lineSlice[i].code = 0
 			} else {
 				lineSlice[i].code = 1
@@ -179,8 +182,8 @@ func InFunction(stack []int) (exists bool) {
 	return false
 }
 
-func PopStack(stack []int) {
-	stack = stack[:len(stack)-1]
+func PopStack(stack []int) ([]int){
+	return stack[:len(stack)-1]
 }
 
 func CreateLines(stringSlice []string) []lineType {

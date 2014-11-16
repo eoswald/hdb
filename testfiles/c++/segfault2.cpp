@@ -1,12 +1,17 @@
 #include <iostream>
+/*
+this is an example segfault file that displays the dopeness of HDB(Hillbilly DeBugger)
+have fun!
+*/
 
 void increment_pointer(int* &ptr){
+  //incremets and prints pointer value and increments the pointer
   *ptr++;
-  std::cout<<"ptr is now "<<*ptr<<"!"<<std::endl;
+  std::cout<<"ptr is now "<<*ptr<<"!!!"<<std::endl;
   ptr+=1;
   ptr=ptr-ptr;
 }
-
+int abc;
 
 int main(){
   int * ptr;
