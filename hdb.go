@@ -61,7 +61,7 @@ func MarkInvalid(lineSlice []lineType) {
 		}
 		if r.MatchString(lineSlice[i].s) {
 			opencount++
-		} else if lineSlice[i].s[0] == 125 {
+		} else if strings.TrimSpace(lineSlice[i].s)[0] == 125 {
 			closecount++
 			lineSlice[i].code = 1
 		}
