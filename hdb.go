@@ -12,9 +12,12 @@ import (
 func main() {
 	var s string
 	var cFile bool = (filepath.Ext(os.Args[1]) == "c")
-	var lastLine bool
+	lastLine := false
+	trackAll := false
 	if len(os.Args) > 2 && os.Args[2] == "--lastline=true" {
 		lastLine = true
+	} else if len(os.Args) > 2 && os.Args[2] == "--trackall=true" {
+		trackAll = true
 	}
 
 	//MakeFile()
@@ -26,7 +29,7 @@ func main() {
 	debugFile, _ := os.Create("testfiles/c++/debug.cpp")
 
 	for i := 0; i < len(lineSlice); i++ {
-		AddPrint(debugFile, lineSlice[i], cFile)
+		AddPrint(debugFile, lineSlice[i], cFile, trackAll)
 	}
 	debugFile.Close()
 	CompileAndRun(lastLine)
@@ -38,7 +41,7 @@ type lineType struct {
 	info string
 }
 
-func AddPrint(file *os.File, line lineType, cFile bool) {
+func AddPrint(file *os.File, line lineType, cFile bool, trackAll bool) {
 	if cFile {
 		if line.code == 0 {
 			file.WriteString("printf(\"" + line.s + "\n\");\n")
@@ -55,6 +58,10 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 		case 0:
 			file.WriteString("std::cout << \"\033[32m" + strings.Replace(line.s, "\"", "\\\"", -1) + "\033[0m\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
+			exp := strings.Split(line.s, " ")
+			if trackAll && len(exp) > 1 && exp[1] == "=" {
+				file.WriteString("std::cout << \"" + exp[0] + " = \"" + "<<" + exp[0] + " << std::endl;\n")
+			}
 		case 343: //function
 			file.WriteString(line.s + "\n")
 			file.WriteString("std::cout << \"\033[34m" + "Entering " + line.info + "\033[0m\" << std::endl;\n")
