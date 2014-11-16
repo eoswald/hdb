@@ -26,12 +26,12 @@ func main() {
 	debugFile, _ := os.Create("testfiles/c++/debug.cpp")
 
 	for i := 0; i < len(lineSlice); i++ {
-		debugFile.WriteString(lineSlice[i].s + "\n")
 		if cfile {
 			AddPrintc(debugFile, lineSlice[i].s)
 		} else {
 			AddPrint(debugFile, lineSlice[i])
 		}
+		debugFile.WriteString(lineSlice[i].s + "\n")
 	}
 	debugFile.Close()
 	CompileAndRun()
