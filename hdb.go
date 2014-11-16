@@ -186,7 +186,7 @@ func CreateLines(stringSlice []string) []lineType {
 func RemoveNewlines(stringSlice []string) []string {
 	var newSlice []string
 	for i := 0; i < len(stringSlice); i++ {
-		if stringSlice[i] != "" && stringSlice[i][0] != 10 {
+		if stringSlice[i] != "" && strings.TrimLeft(stringSlice[i], " ") != "" && strings.TrimLeft(stringSlice[i], " ")[0] != 10 {
 			newSlice = append(newSlice, stringSlice[i])
 		}
 	}
