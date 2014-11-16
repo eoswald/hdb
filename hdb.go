@@ -47,34 +47,36 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 		}
 	} else {
 		whiteSpaceSize := len(line.s) - len(strings.TrimLeft(line.s, " "))
-		whiteSpace := strings.Repeat(" " , whiteSpaceSize)
+		if whiteSpaceSize == 0 {
+			whiteSpaceSize = 4
+		}
+		whiteSpaceIndent := strings.Repeat(" ", whiteSpaceSize+4)
 		switch line.code {
 		case 0:
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 		case 343: //function
 			file.WriteString(line.s + "\n")
-			fmt.Println(whiteSpace + "HI LUKE")
-			file.WriteString("std::cout << \"" + whiteSpace + "Entering " + line.info[0] + "\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + "Entering " + line.info[0] + "\" << std::endl;\n")
 
 		case 666: //if
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + line.info[0] + " evaluates to true\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + whiteSpaceIndent + "if statement: " + line.info[0] + " evaluates to true\" << std::endl;\n")
 		case 752: //else if
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + line.info[0] + " evaluates to true\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + whiteSpaceIndent + "else if statement: " + line.info[0] + " evaluates to true\" << std::endl;\n")
 		case 580: //else
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"Else\" << std::endl;\n")
+			file.WriteString("std::cout << \"" +  whiteSpaceIndent + "else statement:\" << std::endl;\n")
 		case 4: //for
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"Looping\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + whiteSpaceIndent + "looping:\" << std::endl;\n")
 		case 603: //while
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + line.info[0] + " evaluates to true\" << std::endl;\n")
+			file.WriteString("std::cout << \"" + whiteSpaceIndent + line.info[0] + " evaluates to true\" << std::endl;\n")
 		case 1:
 			file.WriteString(line.s + "\n")
 		}
@@ -210,7 +212,7 @@ func CompileAndRun(lastLine bool) {
 func Removecomments(s string) string {
 	r, _ := regexp.Compile(`/\*(.*?)\*/|//(.*?)\n`)
 	ret := r.ReplaceAllString(s, "\n")
-	fmt.Println("TEST\n" + ret + "\nENDTEST\n")
+//	fmt.Println("TEST\n" + ret + "\nENDTEST\n")
 	return ret
 }
 
