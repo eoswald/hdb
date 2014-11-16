@@ -71,7 +71,13 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 		case 4: //for
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"" + whiteSpaceLoop + "looping: " + line.info + "\" << std::endl;\n")
+			forArgs := strings.Split(line.info, ";")
+			if strings.Contains(forArgs[0], "int ") {
+				index := strings.Split(forArgs[0], " ")[1]
+				file.WriteString("std::cout << \"" + whiteSpaceLoop + "looping: " + "\" << " + index + " << std::endl;\n")
+			} else {
+				file.WriteString("std::cout << \"" + whiteSpaceLoop + "looping: " + line.info + "\" << std::endl;\n")
+			}
 		case 603: //while
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
