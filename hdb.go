@@ -206,7 +206,7 @@ func CompileAndRun(lastLine bool) {
 
 func Removecomments(s string) string {
 	r, _ := regexp.Compile(`/\*(.*?)\*/|//(.*?)\n`)
-	ret := r.ReplaceAllString(s, "")
+	ret := r.ReplaceAllString(s, "\n")
 	fmt.Println("TEST\n" + ret + "\nENDTEST\n")
 	return ret
 }
