@@ -8,10 +8,10 @@ bool find_matches(int array[], int n){
       if (array[x]==-array[y]){
         std::cout<<array[x]<<array[y]<<std::endl;
         return 1;
-      } else if (array[x]==5) {
-				std::cout << "else if" << std::endl;
+      } else if (x%2==0) {
+				x = x;
 			} else {
-				std::cout << "else" << std::endl;
+				y = y;
 			}
     }
   }
