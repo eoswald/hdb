@@ -433,6 +433,7 @@ config.status:878: creating man/Makefile
 config.status:878: creating man/uncrustify.1
 config.status:878: creating src/uncrustify_version.h
 config.status:878: creating src/config.h
+config.status:1059: src/config.h is unchanged
 config.status:1107: executing depfiles commands
 
 ## ---------------- ##
