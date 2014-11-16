@@ -45,31 +45,32 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 			file.WriteString(line.s + "\n")
 		}
 	} else {
-		if line.code == 0 {
+		switch line.code {
+		case 0:
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
-		} else if line.code == 343 { //function
+		case 343: //function
 			file.WriteString(line.s + "\n")
 			file.WriteString("Entering " + line.info + "\n")
-		} else if line.code == 666 { //if
+		case 666: //if
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 			file.WriteString(line.info + "evaluates to true\n")
-		} else if line.code == 752 { //else if
+		case 752: //else if
 			file.WriteString(line.s + "\n")
 			file.WriteString(line.info + "evaluates to true\n")
-		} else if line.code == 580 { //else
+		case 580: //else
 			file.WriteString(line.s + "\n")
 			file.WriteString("Else\n")
-		} else if line.code == 4 { //for
+		case 4: //for
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 			file.WriteString("Looping\n")
-		} else if line.code == 603 { //while
+		case 603: //while
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 			file.WriteString(line.info + "evaluates to true, looping")
-		} else {
+		case 1:
 			file.WriteString(line.s + "\n")
 		}
 	}
@@ -94,7 +95,6 @@ func MarkInvalid(lineSlice []lineType) {
 		}
 	}
 }
-
 
 func CreateLines(stringSlice []string) []lineType {
 	var lineSlice []lineType
