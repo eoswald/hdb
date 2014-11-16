@@ -225,16 +225,6 @@ func Removecomments(s string) string {
 	return ret
 }
 
-/*
-func MakeFile() {
-	makeCmd := exec.Command("make", "-f", "astyle/build/gcc/Makefile")
-	err := makeCmd.Run()
-	if err != nil {
-		panic(err)
-	}
-}
-*/
-
 func Format(f string) string {
 	var s string
 	filename := os.Args[1]
