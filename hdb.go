@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	//"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -161,11 +162,8 @@ func MarkInvalid(lineSlice []lineType) {
 			//close
 			lineSlice[i].code = 1
 			stack = PopStack(stack)
-			fmt.Println("asdf")
 		} else {
 			if InFunction(stack) {
-				fmt.Println(stack)
-				fmt.Println(lineSlice[i].s)
 				lineSlice[i].code = 0
 			} else {
 				lineSlice[i].code = 1
@@ -215,14 +213,17 @@ func CompileAndRun(lastLine bool) {
 	gccCmd := exec.Command("g++", "-Wall", "testfiles/c++/debug.cpp", "-o", "testfiles/c++/out")
 	gccCmd.Run()
 	runCmd := exec.Command("./testfiles/c++/out")
-	output, err := runCmd.Output()
+
 	if !lastLine {
-		fmt.Println(string(output))
+		runCmd.Stdout = os.Stdout
+		runCmd.Stdin = os.Stdin
+		_=runCmd.Start()
+		runCmd.Wait()
 	} else {
+		output, _ := runCmd.Output()
 		outSlice := strings.Split(strings.TrimSpace(string(output)), "\n")
 		fmt.Println(outSlice[len(outSlice)-1])
 	}
-	fmt.Println(err)
 }
 
 func Removecomments(s string) string {
