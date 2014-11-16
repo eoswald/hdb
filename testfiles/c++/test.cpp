@@ -2,7 +2,7 @@
 
 
 bool find_matches(int array[], int n){
-  //O(n^2)
+	//O(n^2)
   for (int x=0;x<n-1;x++){
     for (int y=x+1;y<n;y++){
       if (array[x]==-array[y]){

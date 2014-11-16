@@ -46,13 +46,16 @@ func AddPrint(file *os.File, line lineType, cFile bool) {
 			file.WriteString(line.s + "\n")
 		}
 	} else {
+		whiteSpaceSize := len(line.s) - len(strings.TrimLeft(line.s, " "))
+		whiteSpace := strings.Repeat(" " , whiteSpaceSize)
 		switch line.code {
 		case 0:
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
 			file.WriteString(line.s + "\n")
 		case 343: //function
 			file.WriteString(line.s + "\n")
-			file.WriteString("std::cout << \"Entering " + line.info[0] + "\" << std::endl;\n")
+			fmt.Println(whiteSpace + "HI LUKE")
+			file.WriteString("std::cout << \"" + whiteSpace + "Entering " + line.info[0] + "\" << std::endl;\n")
 
 		case 666: //if
 			file.WriteString("std::cout << \"" + line.s + "\" << std::endl;\n")
